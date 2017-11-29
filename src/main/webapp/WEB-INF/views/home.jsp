@@ -10,9 +10,7 @@
 </h1>
 
 <P>  The time on the server is ${serverTime}. </P>
-<c:forEach >
 
-</c:forEach>
-
+<a href="./notice/noticeList">notice</a>
 </body>
 </html>

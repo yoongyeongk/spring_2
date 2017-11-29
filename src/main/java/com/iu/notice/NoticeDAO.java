@@ -85,8 +85,14 @@ public class NoticeDAO implements BoardDAO{
 	public List<BoardDTO> selectList() throws Exception {
 		// TODO Auto-generated method stub
 		Connection con = DBConnector.getConnect();
-		String sql = "select * from notice";
+		String sql = "select * from"
+				+ " (select rownum R, N.* from"
+				+ " (select * from notice order by num desc) N)"
+				+ " where R between ? and ?";
 		PreparedStatement st = con.prepareStatement(sql);
+		
+		st.setInt(1, 1);
+		st.setInt(2, 10);
 		
 		ResultSet rs = st.executeQuery();
 		
@@ -132,6 +138,22 @@ public class NoticeDAO implements BoardDAO{
 		DBConnector.disConnect(con, st, rs);
 		
 		return noticeDTO;
+	}
+
+	@Override
+	public int getTotalCount() throws Exception {
+		// TODO Auto-generated method stub
+		Connection con = DBConnector.getConnect();
+		String sql = "select count(*) from notice";
+		PreparedStatement st = con.prepareStatement(sql);
+		
+		ResultSet rs = st.executeQuery();
+		
+		rs.next();
+		
+		int totalCount = rs.getInt(1);
+		
+		return totalCount;
 	}
 
 }
