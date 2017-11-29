@@ -20,7 +20,14 @@
 		<c:forEach items="${list}" var="dto">
 		<tr>
 			<td>${dto.num}</td>
-			<td><a href="#">${dto.title}</a></td>
+			<td>
+			<c:catch>
+			<c:forEach begin="1" end="${dto.depth}">
+				ㄴ
+			</c:forEach>
+			</c:catch>
+			<a href="#">${dto.title}</a>
+			</td>
 			<td>${dto.writer}</td>
 			<td>${dto.reg_date}</td>
 			<td>${dto.hit}</td>

@@ -1,4 +1,4 @@
-package com.iu.notice;
+package com.iu.qna;
 
 import java.util.List;
 
@@ -7,23 +7,22 @@ import javax.inject.Inject;
 import com.iu.board.BoardDTO;
 import com.iu.board.BoardService;
 
-public class NoticeService implements BoardService {
+public class QnaService implements BoardService {
 
 	@Inject
-	private NoticeDAO noticeDAO;
+	private QnaDAO qnaDAO;
 	
-	public NoticeService() {
-		
+	public QnaService() {
+		// TODO Auto-generated constructor stub
 	}
-	
-	public void setNoticeDAO(NoticeDAO noticeDAO) {
-		this.noticeDAO = noticeDAO;
+
+	public void setQnaDAO(QnaDAO qnaDAO) {
+		this.qnaDAO = qnaDAO;
 	}
 
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
 		// TODO Auto-generated method stub
-		
 		return 0;
 	}
 
@@ -48,10 +47,7 @@ public class NoticeService implements BoardService {
 	@Override
 	public List<BoardDTO> selectList() throws Exception {
 		// TODO Auto-generated method stub
-		
-		//페이징 추가로 해야 함
-		
-		return noticeDAO.selectList();
+		return qnaDAO.selectList();
 	}
 
 }

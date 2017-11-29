@@ -7,27 +7,23 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.iu.board.BoardDTO;
-import com.iu.notice.NoticeDTO;
-import com.iu.notice.NoticeService;
+import com.iu.qna.QnaService;
 
 @Controller
-@RequestMapping(value="/notice/*")
-public class NoticeController {
-
+@RequestMapping(value="/qna/*")
+public class QnaController {
+	
 	@Inject
-	private NoticeService noticeService;
+	private QnaService qnaService;
 
-	@RequestMapping(value="noticeList")
+	@RequestMapping(value="qnaList")
 	public String selectList(Model model){
-		
 		try {
-			List<BoardDTO> ar = noticeService.selectList();
+			List<BoardDTO> ar = qnaService.selectList();
 			
-			model.addAttribute("list", ar).addAttribute("board", "notice");
-			
+			model.addAttribute("list", ar).addAttribute("board", "Qna");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,6 +31,4 @@ public class NoticeController {
 		
 		return "board/boardList";
 	}
-	
-	
 }
