@@ -9,6 +9,7 @@ import java.util.List;
 import com.iu.board.BoardDAO;
 import com.iu.board.BoardDTO;
 import com.iu.util.DBConnector;
+import com.iu.util.RowNum;
 
 import oracle.jdbc.driver.DBConversion;
 
@@ -33,17 +34,18 @@ public class QnaDAO implements BoardDAO {
 	}
 
 	@Override
-	public List<BoardDTO> selectList() throws Exception {
+	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {
 		// TODO Auto-generated method stub
 		Connection con = DBConnector.getConnect();
 		String sql = "select * from"
 				+ " (select rownum R, N.* from"
-				+ " (select * from qna order by ref desc, step asc) N)"
+				+ " (select * from qna where "+rowNum.getKind()+" like ? order by ref desc, step asc) N)"
 				+ " where r between ? and ?";
 		PreparedStatement st = con.prepareStatement(sql);
 		
-		st.setInt(1, 1);
-		st.setInt(2, 10);
+		st.setString(1, "%"+rowNum.getSearch()+"%");
+		st.setInt(2, rowNum.getStartRow());
+		st.setInt(3, rowNum.getLastRow());
 		
 		ResultSet rs = st.executeQuery();
 		
@@ -70,7 +72,28 @@ public class QnaDAO implements BoardDAO {
 	@Override
 	public BoardDTO selectOne(int num) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		Connection con = DBConnector.getConnect();
+		String sql = "select * from qna where num=?";
+		PreparedStatement st = con.prepareStatement(sql);
+		
+		st.setInt(1, num);
+		
+		ResultSet rs = st.executeQuery();
+		
+		QnaDTO qnaDTO = null;
+		if(rs.next()){
+			qnaDTO = new QnaDTO();
+			qnaDTO.setNum(rs.getInt("num"));
+			qnaDTO.setWriter(rs.getString("writer"));
+			qnaDTO.setTitle(rs.getString("title"));
+			qnaDTO.setContents(rs.getString("contents"));
+			qnaDTO.setReg_date(rs.getDate("reg_date"));
+			qnaDTO.setHit(rs.getInt("hit"));
+		}
+		
+		DBConnector.disConnect(con, st, rs);
+		
+		return qnaDTO;
 	}
 
 	@Override
@@ -80,9 +103,23 @@ public class QnaDAO implements BoardDAO {
 	}
 
 	@Override
-	public int getTotalCount() throws Exception {
+	public int getTotalCount(RowNum rowNum) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		Connection con = DBConnector.getConnect();
+		String sql = "select nvl(count(*),0) from qna where "+rowNum.getKind()+" like ?";
+		PreparedStatement st = con.prepareStatement(sql);
+		
+		st.setString(1, "%"+rowNum.getSearch()+"%");
+		
+		ResultSet rs = st.executeQuery();
+		
+		rs.next();
+		
+		int totalCount = rs.getInt(1);
+		
+		DBConnector.disConnect(con, st, rs);
+		
+		return totalCount;
 	}
 
 }

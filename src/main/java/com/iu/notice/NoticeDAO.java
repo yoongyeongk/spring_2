@@ -9,6 +9,7 @@ import java.util.List;
 import com.iu.board.BoardDAO;
 import com.iu.board.BoardDTO;
 import com.iu.util.DBConnector;
+import com.iu.util.RowNum;
 
 public class NoticeDAO implements BoardDAO{
 
@@ -82,17 +83,18 @@ public class NoticeDAO implements BoardDAO{
 	}
 
 	@Override
-	public List<BoardDTO> selectList() throws Exception {
+	public List<BoardDTO> selectList(RowNum rowNum) throws Exception {
 		// TODO Auto-generated method stub
 		Connection con = DBConnector.getConnect();
 		String sql = "select * from"
 				+ " (select rownum R, N.* from"
-				+ " (select * from notice order by num desc) N)"
+				+ " (select * from notice where "+rowNum.getKind()+" like ? order by num desc) N)"
 				+ " where R between ? and ?";
 		PreparedStatement st = con.prepareStatement(sql);
 		
-		st.setInt(1, 1);
-		st.setInt(2, 10);
+		st.setString(1, "%"+rowNum.getSearch()+"%");
+		st.setInt(2, rowNum.getStartRow());
+		st.setInt(3, rowNum.getLastRow());
 		
 		ResultSet rs = st.executeQuery();
 		
@@ -141,17 +143,21 @@ public class NoticeDAO implements BoardDAO{
 	}
 
 	@Override
-	public int getTotalCount() throws Exception {
+	public int getTotalCount(RowNum rowNum) throws Exception {
 		// TODO Auto-generated method stub
 		Connection con = DBConnector.getConnect();
-		String sql = "select count(*) from notice";
+		String sql = "select nvl(count(*), 0) from notice where "+rowNum.getKind()+" like ?";
 		PreparedStatement st = con.prepareStatement(sql);
 		
+		st.setString(1, "%"+rowNum.getSearch()+"%");
+
 		ResultSet rs = st.executeQuery();
 		
 		rs.next();
 		
 		int totalCount = rs.getInt(1);
+		
+		DBConnector.disConnect(con, st, rs);
 		
 		return totalCount;
 	}

@@ -1,11 +1,17 @@
 package com.iu.notice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.ui.Model;
+
 import com.iu.board.BoardDTO;
 import com.iu.board.BoardService;
+import com.iu.util.ListData;
+import com.iu.util.Pager;
+import com.iu.util.RowNum;
 
 public class NoticeService implements BoardService {
 
@@ -40,18 +46,21 @@ public class NoticeService implements BoardService {
 	}
 
 	@Override
-	public BoardDTO selectOne(int num) throws Exception {
+	public void selectOne(int num, Model model) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		noticeDAO.hitUpdate(num);
+		model.addAttribute("view", noticeDAO.selectOne(num));
 	}
 
 	@Override
-	public List<BoardDTO> selectList() throws Exception {
+	public void selectList(ListData listData, Model model) throws Exception {
 		// TODO Auto-generated method stub
 		
-		//페이징 추가로 해야 함
-		
-		return noticeDAO.selectList();
+		//페이징
+		RowNum rowNum = listData.makeRow();
+		Pager pager = listData.makePage(noticeDAO.getTotalCount(rowNum));
+		model.addAttribute("list", noticeDAO.selectList(rowNum));
+		model.addAttribute("pager", pager);
 	}
 
 }

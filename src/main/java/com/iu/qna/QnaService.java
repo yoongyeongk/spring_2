@@ -4,8 +4,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.ui.Model;
+
 import com.iu.board.BoardDTO;
 import com.iu.board.BoardService;
+import com.iu.util.ListData;
+import com.iu.util.Pager;
+import com.iu.util.RowNum;
 
 public class QnaService implements BoardService {
 
@@ -39,15 +44,19 @@ public class QnaService implements BoardService {
 	}
 
 	@Override
-	public BoardDTO selectOne(int num) throws Exception {
+	public void selectOne(int num, Model model) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		qnaDAO.hitUpdate(num);
+		model.addAttribute("view", qnaDAO.selectOne(num));
 	}
 
 	@Override
-	public List<BoardDTO> selectList() throws Exception {
+	public void selectList(ListData listData, Model model) throws Exception {
 		// TODO Auto-generated method stub
-		return qnaDAO.selectList();
+		RowNum rowNum = listData.makeRow();
+		Pager pager = listData.makePage(qnaDAO.getTotalCount(rowNum));
+		model.addAttribute("list", qnaDAO.selectList(rowNum));
+		model.addAttribute("pager", pager);
 	}
 
 }
