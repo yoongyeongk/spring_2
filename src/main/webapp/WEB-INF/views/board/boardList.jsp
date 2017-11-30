@@ -9,6 +9,12 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 	$(function(){
+		var message = '${message}';
+		if(message != ""){
+			alert(message);
+		}
+		
+		
 		$(".list").click(function(){
 			var cur = $(this).attr("title");
 			var s = '${pager.search}';
@@ -75,5 +81,7 @@
 			<span class="list" title="${pager.lastNum+1}">[다음]</span>
 		</c:if>
 	</div>
+	
+	<a href="${board}Write">글쓰기</a>
 </body>
 </html>

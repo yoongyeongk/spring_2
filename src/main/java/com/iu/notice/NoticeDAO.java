@@ -17,13 +17,12 @@ public class NoticeDAO implements BoardDAO{
 	public int insert(BoardDTO boardDTO) throws Exception {
 		// TODO Auto-generated method stub
 		Connection con = DBConnector.getConnect();
-		String sql = "insert into notice values(board_seq,?,?,?,sysdate,0)";
+		String sql = "insert into notice values(board_seq.nextval,?,?,?,sysdate,0)";
 		PreparedStatement st = con.prepareStatement(sql);
 		
 		st.setString(1, boardDTO.getWriter());
 		st.setString(2, boardDTO.getTitle());
 		st.setString(3, boardDTO.getContents());
-		st.setDate(4, boardDTO.getReg_date());
 		
 		int result = st.executeUpdate();
 		

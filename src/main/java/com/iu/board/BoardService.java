@@ -18,7 +18,7 @@ public interface BoardService {
 	public int delete(int num) throws Exception;
 	
 	//selectOne
-	public void selectOne(int num, Model model) throws Exception;
+	public BoardDTO selectOne(int num) throws Exception;
 	
 	//selectList
 	public void selectList(ListData listData, Model model) throws Exception;

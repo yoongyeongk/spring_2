@@ -12,18 +12,32 @@ import com.iu.util.DBConnector;
 import com.iu.util.RowNum;
 
 import oracle.jdbc.driver.DBConversion;
+import oracle.jdbc.proxy.annotation.Pre;
 
 public class QnaDAO implements BoardDAO {
 
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		Connection con = DBConnector.getConnect();
+		String sql = "insert into qna values(board_seq.nextval,?,?,?,sysdate,0,board_seq.currval,0,0)";
+		PreparedStatement st = con.prepareStatement(sql);
+		
+		st.setString(1, boardDTO.getTitle());
+		st.setString(2, boardDTO.getWriter());
+		st.setString(3, boardDTO.getContents());
+		
+		int result = st.executeUpdate();
+		
+		DBConnector.disConnect(con, st);
+		
+		return result;
 	}
 
 	@Override
 	public int update(BoardDTO boardDTO) throws Exception {
 		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -99,7 +113,15 @@ public class QnaDAO implements BoardDAO {
 	@Override
 	public int hitUpdate(int num) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		Connection con = DBConnector.getConnect();
+		String sql = "update qna set hit=hit+1 where num=?";
+		PreparedStatement st = con.prepareStatement(sql);
+		
+		st.setInt(1, num);
+		
+		int result = st.executeUpdate();
+		
+		return result;
 	}
 
 	@Override

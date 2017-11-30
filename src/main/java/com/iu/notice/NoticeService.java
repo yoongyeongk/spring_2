@@ -18,10 +18,6 @@ public class NoticeService implements BoardService {
 	@Inject
 	private NoticeDAO noticeDAO;
 	
-	public NoticeService() {
-		
-	}
-	
 	public void setNoticeDAO(NoticeDAO noticeDAO) {
 		this.noticeDAO = noticeDAO;
 	}
@@ -29,8 +25,7 @@ public class NoticeService implements BoardService {
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
 		// TODO Auto-generated method stub
-		
-		return 0;
+		return noticeDAO.insert(boardDTO);
 	}
 
 	@Override
@@ -46,10 +41,10 @@ public class NoticeService implements BoardService {
 	}
 
 	@Override
-	public void selectOne(int num, Model model) throws Exception {
+	public BoardDTO selectOne(int num) throws Exception {
 		// TODO Auto-generated method stub
 		noticeDAO.hitUpdate(num);
-		model.addAttribute("view", noticeDAO.selectOne(num));
+		return noticeDAO.selectOne(num);
 	}
 
 	@Override

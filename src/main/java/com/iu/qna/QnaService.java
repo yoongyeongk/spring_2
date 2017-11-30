@@ -17,10 +17,6 @@ public class QnaService implements BoardService {
 	@Inject
 	private QnaDAO qnaDAO;
 	
-	public QnaService() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public void setQnaDAO(QnaDAO qnaDAO) {
 		this.qnaDAO = qnaDAO;
 	}
@@ -28,7 +24,7 @@ public class QnaService implements BoardService {
 	@Override
 	public int insert(BoardDTO boardDTO) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return qnaDAO.insert(boardDTO);
 	}
 
 	@Override
@@ -44,10 +40,10 @@ public class QnaService implements BoardService {
 	}
 
 	@Override
-	public void selectOne(int num, Model model) throws Exception {
+	public BoardDTO selectOne(int num) throws Exception {
 		// TODO Auto-generated method stub
 		qnaDAO.hitUpdate(num);
-		model.addAttribute("view", qnaDAO.selectOne(num));
+		return qnaDAO.selectOne(num);
 	}
 
 	@Override
