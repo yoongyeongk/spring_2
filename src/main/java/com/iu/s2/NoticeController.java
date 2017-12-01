@@ -1,12 +1,19 @@
 package com.iu.s2;
 
-import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.iu.board.BoardDTO;
@@ -17,7 +24,7 @@ import com.iu.util.ListData;
 @RequestMapping(value="/notice/*")
 public class NoticeController {
 
-	@Inject
+	@Autowired
 	private NoticeService noticeService;
 
 	@RequestMapping(value="noticeList")
@@ -57,20 +64,47 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="noticeWrite", method={RequestMethod.POST})
-	public String insert(RedirectAttributes rd, BoardDTO boardDTO){
-		int result = 0;
-		try {
-			result = noticeService.insert(boardDTO);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String message="fail";
-		if(result>0){
-			message="Success";
-		}
-		rd.addFlashAttribute("message", message);
+	public String insert(RedirectAttributes rd,BoardDTO boardDTO,@RequestParam(value="f1")MultipartFile [] files, HttpSession session){
+		//파일 경로 구하기
+		String filePath = session.getServletContext().getRealPath("resources/upload");
+		File f = new File(filePath);
 		
+		//해당 경로에 파일이 없을 시 새로 만들기
+				if(!f.exists()){
+					f.mkdirs();
+				}
+				
+				System.out.println("path:"+filePath);
+				
+				for(MultipartFile file: files){
+					String fileName = file.getOriginalFilename();
+					f = new File(filePath, fileName);
+					String name = UUID.randomUUID().toString();
+					fileName = name + fileName.substring(fileName.lastIndexOf("."));
+					
+					f = new File(filePath, fileName);
+					try {
+						file.transferTo(f);
+					} catch (IllegalStateException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				int result = 0;
+				try {
+					result = noticeService.insert(boardDTO);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String message="fail";
+				if(result>0){
+					message="Success";
+				}
+				rd.addFlashAttribute("message", message);
 		return "redirect:./noticeList";
 	}
 }

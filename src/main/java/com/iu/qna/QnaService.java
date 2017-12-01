@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.iu.board.BoardDTO;
@@ -12,6 +13,7 @@ import com.iu.util.ListData;
 import com.iu.util.Pager;
 import com.iu.util.RowNum;
 
+@Service
 public class QnaService implements BoardService {
 
 	@Inject
