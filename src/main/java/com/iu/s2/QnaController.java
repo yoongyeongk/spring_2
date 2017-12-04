@@ -1,6 +1,7 @@
 package com.iu.s2;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,10 +56,10 @@ public class QnaController {
 	}
 	
 	@RequestMapping(value="qnaWrite", method={RequestMethod.POST})
-	public String insert(Model model, BoardDTO boardDTO){
+	public String insert(Model model, BoardDTO boardDTO, HttpSession session){
 		
 		try {
-			int result = qnaService.insert(boardDTO);
+			int result = qnaService.insert(boardDTO, session);
 			model.addAttribute("board", "qna");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

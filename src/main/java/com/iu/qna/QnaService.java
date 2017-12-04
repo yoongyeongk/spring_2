@@ -3,6 +3,7 @@ package com.iu.qna;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class QnaService implements BoardService {
 	}
 
 	@Override
-	public int insert(BoardDTO boardDTO) throws Exception {
+	public int insert(BoardDTO boardDTO, HttpSession session) throws Exception {
 		// TODO Auto-generated method stub
 		return qnaDAO.insert(boardDTO);
 	}

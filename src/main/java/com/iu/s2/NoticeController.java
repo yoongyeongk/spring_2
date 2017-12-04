@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.iu.board.BoardDTO;
+import com.iu.notice.NoticeDTO;
 import com.iu.notice.NoticeService;
 import com.iu.util.ListData;
 
@@ -64,8 +65,16 @@ public class NoticeController {
 	}
 	
 	@RequestMapping(value="noticeWrite", method={RequestMethod.POST})
-	public String insert(RedirectAttributes rd,BoardDTO boardDTO,@RequestParam(value="f1")MultipartFile [] files, HttpSession session){
-		//파일 경로 구하기
+	public String insert(RedirectAttributes rd,NoticeDTO boardDTO, HttpSession session){
+
+		int result = 0;
+		try {
+			result = noticeService.insert(boardDTO, session);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*//파일 경로 구하기
 		String filePath = session.getServletContext().getRealPath("resources/upload");
 		File f = new File(filePath);
 		
@@ -104,7 +113,7 @@ public class NoticeController {
 				if(result>0){
 					message="Success";
 				}
-				rd.addFlashAttribute("message", message);
+				rd.addFlashAttribute("message", message);*/
 		return "redirect:./noticeList";
 	}
 }
