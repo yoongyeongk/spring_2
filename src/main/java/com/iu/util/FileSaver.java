@@ -4,9 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Component
 public class FileSaver {
 	//1.  outputStream 사용
 	public String save1(String filePath, MultipartFile multipartFile) throws Exception{

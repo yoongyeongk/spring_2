@@ -31,13 +31,13 @@ public class QnaService implements BoardService {
 	}
 
 	@Override
-	public int update(BoardDTO boardDTO) throws Exception {
+	public int update(BoardDTO boardDTO, HttpSession session) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int delete(int num) throws Exception {
+	public int delete(int num, HttpSession session) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}

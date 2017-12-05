@@ -1,5 +1,6 @@
 package com.iu.notice;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +29,15 @@ public class NoticeService implements BoardService {
 	private NoticeDAO noticeDAO;
 	@Inject
 	private FileDAO fileDAO;
+	@Inject
+	private FileSaver fileSaver;
 	
 	@Override
 	public int insert(BoardDTO boardDTO, HttpSession session) throws Exception {
 		// TODO Auto-generated method stub
 		int num = noticeDAO.getNum();
 		String filePath = session.getServletContext().getRealPath("resources/upload");
-		FileSaver fileSaver = new FileSaver();
+		System.out.println(filePath);
 		
 		ArrayList<FileDTO> files = new ArrayList<FileDTO>();
 		FileDTO fileDTO = null;
@@ -53,22 +56,57 @@ public class NoticeService implements BoardService {
 	}
 
 	@Override
-	public int update(BoardDTO boardDTO) throws Exception {
+	public int update(BoardDTO boardDTO, HttpSession session) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		//notice 업데이트
+		result = noticeDAO.update(boardDTO);
+		
+		//file 업데이트(새로 추가 시)
+		String filePath = session.getServletContext().getRealPath("resources/upload");
+		MultipartFile [] ar = ((NoticeDTO)boardDTO).getF1();
+		if(ar.length != 0){
+			FileDTO fileDTO = null;
+			for(MultipartFile f: ar){
+				fileDTO = new FileDTO();
+				fileDTO.setNum(boardDTO.getNum());
+				fileDTO.setFilename(fileSaver.save2(filePath, f));
+				fileDTO.setOriname(f.getOriginalFilename());
+				fileDAO.insert(fileDTO);
+			}
+		}
+		return result;
 	}
 
 	@Override
-	public int delete(int num) throws Exception {
+	public int delete(int num, HttpSession session) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		String filePath = session.getServletContext().getRealPath("resources/upload");
+		List<FileDTO> ar = fileDAO.selectList(num);
+		if(ar.size() != 0){
+			for(FileDTO fileDTO: ar){
+				String fileName = fileDTO.getFilename();
+				File file = new File(filePath, fileName);
+				if(file.exists()){
+					file.delete();
+				}
+			}
+			result = fileDAO.delete(num);
+		}
+		result = noticeDAO.delete(num);
+				
+		return result;
 	}
 
 	@Override
 	public BoardDTO selectOne(int num) throws Exception {
 		// TODO Auto-generated method stub
 		noticeDAO.hitUpdate(num);
-		return noticeDAO.selectOne(num);
+		NoticeDTO noticeDTO = (NoticeDTO)noticeDAO.selectOne(num);
+		List<FileDTO> ar = fileDAO.selectList(num);
+		noticeDTO.setAr(ar);
+		return noticeDTO;
 	}
 
 	@Override

@@ -69,4 +69,5 @@ public class QnaController {
 		return "redirect:./qnaList";
 	}
 
+	
 }
