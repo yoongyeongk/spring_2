@@ -103,12 +103,15 @@ input{
 		//파일 삭제
 		$(".deleteFile").click(function(){
 			var fnum = $(this).attr("title");
-			$.post("../util/fileDelete",{fnum: fnum},function(data){
-				if(data.trim()>0){
-					//location.reload();
-					$("#del"+fnum).remove();
-				}
-			});
+			var c = confirm("확인을 누르면 파일이 영구적으로 삭제됩니다. 삭제하시겠습니까?");
+			if(c == true){
+				$.post("../util/fileDelete",{fnum: fnum},function(data){
+					if(data.trim()>0){
+						//location.reload();
+						$("#del"+fnum).remove();
+					}
+				});				
+			}
 		})
 	
 	});
@@ -129,12 +132,10 @@ input{
 		</tr>
 		<c:forEach items="${view.ar}" var="file">
 			<tr id="del${file.fnum}">
-				<td class="content fileDiv" colspan="2">${file.oriname}<input class="deleteFile" title="${file.fnum}" type="button" value="X"></td>
+				<td class="content fileDiv" colspan="2">${file.oriname}<input class="deleteFile" title="${file.fnum}" type="button" value="delete"></td>
 			</tr>
 		</c:forEach>
 	</table>
-	
-	
 	
 	<div class="fileSec" id="fileSec">
 	<div class="fileDiv">
