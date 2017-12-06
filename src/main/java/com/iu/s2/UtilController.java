@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.iu.file.FileService;
 import com.iu.file.PhotoDTO;
@@ -25,6 +26,18 @@ public class UtilController {
 	
 	@Inject
 	private FileService fileService;
+	
+	@RequestMapping(value="download")
+	public ModelAndView fileDownload(String filename, String oriname, HttpSession session){
+		String filePath = session.getServletContext().getRealPath("resources/upload");
+		File file = new File(filePath, filename);
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("down", file);
+		mv.addObject("oriname", oriname);
+		mv.setViewName("FileDown");
+		
+		return mv;
+	}
 	
 	@RequestMapping(value="photoUpload", method=RequestMethod.POST)
 	public String smartEditor(PhotoDTO photoDTO, HttpSession session){
