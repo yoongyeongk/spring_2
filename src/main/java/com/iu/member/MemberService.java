@@ -53,6 +53,20 @@ public class MemberService {
 		session.invalidate();
 	}
 	
+	public int update(MemberDTO memberDTO, HttpSession session) throws Exception{
+		String filePath = session.getServletContext().getRealPath("resources/upload");
+		System.out.println(filePath);
+		if(memberDTO.getF1() != null){
+			memberDTO.setFname(fileSaver.save2(filePath, memberDTO.getF1()));
+			memberDTO.setOname(memberDTO.getF1().getOriginalFilename());
+		}else{
+			memberDTO.setFname((memberDAO.selectOne(memberDTO.getId())).getFname());
+		}
+		int result = memberDAO.update(memberDTO);
+		
+		return result;
+	}
+	
 	public int delete(String id, HttpSession session) throws Exception{
 		String filePath = session.getServletContext().getRealPath("resources/upload");
 		MemberDTO memberDTO = memberDAO.selectOne(id);

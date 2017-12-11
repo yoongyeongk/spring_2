@@ -3,6 +3,7 @@ package com.iu.s2;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.RequestWrapper;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -76,6 +77,27 @@ public class MemberController {
 	
 	@RequestMapping(value="memberMypage")
 	public void selectOne(){}
+	
+	@RequestMapping(value="memberUpdate", method=RequestMethod.GET)
+	public void update(){}
+	
+	@RequestMapping(value="memberUpdate", method=RequestMethod.POST)
+	public String update(MemberDTO memberDTO, HttpSession session, RedirectAttributes rd){
+		int result = 0;
+		try {
+			result = memberService.update(memberDTO, session);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String message = "update fail";
+		if(result>0){
+			message = "update success";
+		}
+		rd.addFlashAttribute("message", message);
+		
+		return "redirect:./memberMypage";
+	}
 	
 	@RequestMapping(value="memberDelete")
 	public String delete(String id, HttpSession session){
